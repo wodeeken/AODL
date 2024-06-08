@@ -81,8 +81,16 @@ namespace AODL.Document.Import.OpenDocument
 
 		static OpenDocumentImporter()
 		{
-			OpenDocumentImporter.dir = string.Concat(Environment.CurrentDirectory, "\\aodlread\\");
-			OpenDocumentImporter.dirpics = string.Concat(Environment.CurrentDirectory, "\\PicturesRead\\");
+			string folderDelimiter = "";
+			if(System.Environment.OSVersion.Platform == PlatformID.Unix){
+				System.Diagnostics.Debug.WriteLine("UNIX!!");
+				folderDelimiter = "/";
+			}else if(System.Environment.OSVersion.Platform == PlatformID.Win32NT){
+				folderDelimiter = "\\";
+				System.Diagnostics.Debug.WriteLine("WINDOWS");
+			}
+			OpenDocumentImporter.dir = string.Concat(Environment.CurrentDirectory, folderDelimiter + "aodlread" + folderDelimiter);
+			OpenDocumentImporter.dirpics = string.Concat(Environment.CurrentDirectory, folderDelimiter + "PicturesRead" + folderDelimiter);
 		}
 
 		public OpenDocumentImporter()
@@ -169,8 +177,14 @@ namespace AODL.Document.Import.OpenDocument
 		{
 			try
 			{
+				string folderDelimiter = "";
+				if(System.Environment.OSVersion.Platform == PlatformID.Unix){
+					folderDelimiter = "/";
+				}else if(System.Environment.OSVersion.Platform == PlatformID.Win32NT){
+					folderDelimiter = "\\";
+				}
 				this._document.XmlDoc = new XmlDocument();
-				this._document.XmlDoc.Load(string.Concat(OpenDocumentImporter.dir, "\\content.xml"));
+				this._document.XmlDoc.Load(string.Concat(OpenDocumentImporter.dir, folderDelimiter + "content.xml"));
 				(new LocalStyleProcessor(this._document, false)).ReadStyles();
 				this.ImportCommonStyles();
 				(new LocalStyleProcessor(this._document, true)).ReadStyles();
@@ -254,6 +268,12 @@ namespace AODL.Document.Import.OpenDocument
 		{
 			try
 			{
+				string folderDelimiter = "";
+				if(System.Environment.OSVersion.Platform == PlatformID.Unix){
+					folderDelimiter = "/";
+				}else if(System.Environment.OSVersion.Platform == PlatformID.Win32NT){
+					folderDelimiter = "\\";
+				}
 				this._document.DocumentConfigurations2 = new DocumentConfiguration2();
 				this.ReadDocumentConfigurations2();
 				this._document.DocumentMetadata = new DocumentMetadata(this._document);
@@ -266,7 +286,7 @@ namespace AODL.Document.Import.OpenDocument
 					((TextDocument)this._document).DocumentManifest = new AODL.Document.TextDocuments.DocumentManifest();
 					string folderName = AODL.Document.TextDocuments.DocumentManifest.FolderName;
 					fileName = AODL.Document.TextDocuments.DocumentManifest.FileName;
-					((TextDocument)this._document).DocumentManifest.LoadFromFile(string.Concat(OpenDocumentImporter.dir, folderName, "\\", fileName));
+					((TextDocument)this._document).DocumentManifest.LoadFromFile(string.Concat(OpenDocumentImporter.dir, folderName, folderDelimiter, fileName));
 					((TextDocument)this._document).DocumentStyles = new AODL.Document.TextDocuments.DocumentStyles();
 					fileName = AODL.Document.TextDocuments.DocumentStyles.FileName;
 					((TextDocument)this._document).DocumentStyles.LoadFromFile(string.Concat(OpenDocumentImporter.dir, fileName));
@@ -279,7 +299,7 @@ namespace AODL.Document.Import.OpenDocument
 					((SpreadsheetDocument)this._document).DocumentManifest = new AODL.Document.SpreadsheetDocuments.DocumentManifest();
 					string folderName1 = AODL.Document.TextDocuments.DocumentManifest.FolderName;
 					str = AODL.Document.TextDocuments.DocumentManifest.FileName;
-					((SpreadsheetDocument)this._document).DocumentManifest.LoadFromFile(string.Concat(OpenDocumentImporter.dir, folderName1, "\\", str));
+					((SpreadsheetDocument)this._document).DocumentManifest.LoadFromFile(string.Concat(OpenDocumentImporter.dir, folderName1, folderDelimiter, str));
 					((SpreadsheetDocument)this._document).DocumentStyles = new AODL.Document.SpreadsheetDocuments.DocumentStyles();
 					str = AODL.Document.TextDocuments.DocumentStyles.FileName;
 					((SpreadsheetDocument)this._document).DocumentStyles.LoadFromFile(string.Concat(OpenDocumentImporter.dir, str));

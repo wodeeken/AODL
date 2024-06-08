@@ -76,7 +76,13 @@ namespace AODL.Document.Export.OpenDocument
 
 		static OpenDocumentTextExporter()
 		{
-			OpenDocumentTextExporter.dir = string.Concat(Environment.CurrentDirectory, "\\aodlwrite\\");
+			string folderDelimiter = "";
+			if(System.Environment.OSVersion.Platform == PlatformID.Unix){
+				folderDelimiter = "/";
+			}else if(System.Environment.OSVersion.Platform == PlatformID.Win32NT){
+				folderDelimiter = "\\";
+			}
+			OpenDocumentTextExporter.dir = string.Concat(Environment.CurrentDirectory, folderDelimiter + "aodlwrite" + folderDelimiter);
 		}
 
 		public OpenDocumentTextExporter()
@@ -123,7 +129,13 @@ namespace AODL.Document.Export.OpenDocument
 		{
 			try
 			{
-				string str = string.Concat(directory, "\\Pictures\\");
+				string folderDelimiter = "";
+				if(System.Environment.OSVersion.Platform == PlatformID.Unix){
+					folderDelimiter = "/";
+				}else if(System.Environment.OSVersion.Platform == PlatformID.Win32NT){
+					folderDelimiter = "\\";
+				}
+				string str = string.Concat(directory, folderDelimiter + "Pictures" + folderDelimiter);
 				foreach (Graphic graphic in document.Graphics)
 				{
 					if (graphic.GraphicRealPath == null)
@@ -167,6 +179,12 @@ namespace AODL.Document.Export.OpenDocument
 		{
 			try
 			{
+				string folderDelimiter = "";
+				if(System.Environment.OSVersion.Platform == PlatformID.Unix){
+					folderDelimiter = "/";
+				}else if(System.Environment.OSVersion.Platform == PlatformID.Win32NT){
+					folderDelimiter = "\\";
+				}
 				this._document = document;
 				this.PrepareDirectory(OpenDocumentTextExporter.dir);
 				if (!(document is TextDocument))
@@ -175,7 +193,7 @@ namespace AODL.Document.Export.OpenDocument
 					{
 						throw new Exception("Unsupported document type!");
 					}
-					this.WriteSingleFiles(((SpreadsheetDocument)document).DocumentManifest.Manifest, string.Concat(OpenDocumentTextExporter.dir, AODL.Document.TextDocuments.DocumentManifest.FolderName, "\\", AODL.Document.TextDocuments.DocumentManifest.FileName));
+					this.WriteSingleFiles(((SpreadsheetDocument)document).DocumentManifest.Manifest, string.Concat(OpenDocumentTextExporter.dir, AODL.Document.TextDocuments.DocumentManifest.FolderName, folderDelimiter , AODL.Document.TextDocuments.DocumentManifest.FileName));
 					this.WriteSingleFiles(((SpreadsheetDocument)document).DocumentMetadata.Meta, string.Concat(OpenDocumentTextExporter.dir, DocumentMetadata.FileName));
 					this.WriteSingleFiles(((SpreadsheetDocument)document).DocumentSetting.Settings, string.Concat(OpenDocumentTextExporter.dir, AODL.Document.TextDocuments.DocumentSetting.FileName));
 					this.WriteSingleFiles(((SpreadsheetDocument)document).DocumentStyles.Styles, string.Concat(OpenDocumentTextExporter.dir, AODL.Document.TextDocuments.DocumentStyles.FileName));
@@ -183,14 +201,14 @@ namespace AODL.Document.Export.OpenDocument
 				}
 				else
 				{
-					this.WriteSingleFiles(((TextDocument)document).DocumentManifest.Manifest, string.Concat(OpenDocumentTextExporter.dir, AODL.Document.TextDocuments.DocumentManifest.FolderName, "\\", AODL.Document.TextDocuments.DocumentManifest.FileName));
+					this.WriteSingleFiles(((TextDocument)document).DocumentManifest.Manifest, string.Concat(OpenDocumentTextExporter.dir, AODL.Document.TextDocuments.DocumentManifest.FolderName, folderDelimiter, AODL.Document.TextDocuments.DocumentManifest.FileName));
 					this.WriteSingleFiles(((TextDocument)document).DocumentMetadata.Meta, string.Concat(OpenDocumentTextExporter.dir, DocumentMetadata.FileName));
 					this.WriteSingleFiles(((TextDocument)document).DocumentSetting.Settings, string.Concat(OpenDocumentTextExporter.dir, AODL.Document.TextDocuments.DocumentSetting.FileName));
 					this.WriteSingleFiles(((TextDocument)document).DocumentStyles.Styles, string.Concat(OpenDocumentTextExporter.dir, AODL.Document.TextDocuments.DocumentStyles.FileName));
 					this.WriteSingleFiles(((TextDocument)document).XmlDoc, string.Concat(OpenDocumentTextExporter.dir, "content.xml"));
 					OpenDocumentTextExporter.SaveGraphic((TextDocument)document, OpenDocumentTextExporter.dir);
 				}
-				this.WriteMimetypeFile(string.Concat(OpenDocumentTextExporter.dir, "\\mimetyp"));
+				this.WriteMimetypeFile(string.Concat(OpenDocumentTextExporter.dir, folderDelimiter + "mimetyp"));
 				OpenDocumentTextExporter.CreateOpenDocument(filename, OpenDocumentTextExporter.dir);
 			}
 			catch (Exception exception)
@@ -207,6 +225,12 @@ namespace AODL.Document.Export.OpenDocument
 		{
 			try
 			{
+				string folderDelimiter = "";
+				if(System.Environment.OSVersion.Platform == PlatformID.Unix){
+					folderDelimiter = "/";
+				}else if(System.Environment.OSVersion.Platform == PlatformID.Win32NT){
+					folderDelimiter = "\\";
+				}
 				if (Directory.Exists(directory))
 				{
 					Directory.Delete(directory, true);
@@ -215,7 +239,7 @@ namespace AODL.Document.Export.OpenDocument
 				for (int i = 0; i < (int)strArray.Length; i++)
 				{
 					string str = strArray[i];
-					Directory.CreateDirectory(string.Concat(directory, "\\", str));
+					Directory.CreateDirectory(string.Concat(directory, folderDelimiter, str));
 				}
 			}
 			catch (Exception exception)

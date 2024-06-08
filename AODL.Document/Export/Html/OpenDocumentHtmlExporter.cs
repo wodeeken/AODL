@@ -105,17 +105,23 @@ namespace AODL.Document.Export.Html
 		{
 			try
 			{
+				string folderDelimiter = "";
+				if(System.Environment.OSVersion.Platform == PlatformID.Unix){
+				folderDelimiter = "/";
+				}else if(System.Environment.OSVersion.Platform == PlatformID.Win32NT){
+					folderDelimiter = "\\";
+				}
 				this._document = document;
 				string currentDirectory = Environment.CurrentDirectory;
-				int num = filename.LastIndexOf("\\");
+				int num = filename.LastIndexOf(folderDelimiter);
 				if (num != -1)
 				{
 					currentDirectory = filename.Substring(0, num);
 				}
 				string str = this.AppendHtml(this._document.Content, this.GetTemplate());
 				this.WriteHtmlFile(filename, str);
-				string str1 = "\\Pictures";
-				string str2 = string.Concat(currentDirectory, "\\", this._imgFolder);
+				string str1 = folderDelimiter + "Pictures";
+				string str2 = string.Concat(currentDirectory, folderDelimiter, this._imgFolder);
 				if (!Directory.Exists(string.Concat(str2, str1)))
 				{
 					Directory.CreateDirectory(string.Concat(str2, str1));
